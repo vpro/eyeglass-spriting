@@ -13,6 +13,11 @@ Register your sprite source images as [eyeglass assets](https://github.com/sass-
 
 Please also note this requires use of `node` version `0.12` or newer. (Check with `node -v`.)
 
+# Note
+This fork by VPRO deals with the compatibility of Eyeglass Spriting with Node version 6.11.1 and up
+by using [Pajk/lwip](https://github.com/Pajk/lwip) instead of [lwip](https://github.com/EyalAr/lwip)
+for [issue 297](https://github.com/EyalAr/lwip/issues/297)
+
 # Quick Start
 
 When working with a large number of sprites, you can generate css selectors by iterating through them:

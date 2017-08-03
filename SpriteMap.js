@@ -7,7 +7,7 @@
 // var crypto = require("crypto");
 var fs = require("fs");
 var path = require("path");
-var lwip = require("lwip");
+var lwip = require("pajk-lwip");
 
 var getLastModifiedDate = function(filename) {
   return fs.statSync(filename).mtime.getTime();
