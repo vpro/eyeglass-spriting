@@ -7,7 +7,7 @@
 // var crypto = require("crypto");
 var fs = require("fs");
 var path = require("path");
-var lwip = require("pajk-lwip");
+var Jimp = require("jimp");
 
 var getLastModifiedDate = function(filename) {
   return fs.statSync(filename).mtime.getTime();
@@ -71,13 +71,14 @@ module.exports = function(sass) {
 
     var aux = function(index) {
       if (index < self.sprites.length) {
-        lwip.open(self.sprites[index].filename, function(err, image) {
+
+        Jimp.read(self.sprites[index].filename, function(err, image) {
           if (err) {
             cb(err, null);
           }
 
-          self.sprites[index].width = image.width();
-          self.sprites[index].height = image.height();
+          self.sprites[index].width = image.bitmap.width;
+          self.sprites[index].height = image.bitmap.height;
 
           try {
             self.sprites[index].lastModified
@@ -221,20 +222,22 @@ module.exports = function(sass) {
   };
 
 
-  // create spritemap image, only it does not already exist or is out of date
+  // create spritemap image, only if it does not already exist or is out of date
   SpriteMap.prototype.createSpriteMap = function(dir, cb) {
     var self = this;
 
     if (this.needsUpdating(dir)) {
       var pasteImages = function(index, curSpritemap) {
         if (index < self.sprites.length) {
-          lwip.open(self.sprites[index].filename, function(err, image) {
+
+          Jimp.read(self.sprites[index].filename, function(err, image) {
             if (err) {
               throw err;
             }
             var originX = self.sprites[index].originX;
             var originY = self.sprites[index].originY;
-            curSpritemap.paste(originX, originY, image, function(pasteErr, newSpritemap) {
+
+            curSpritemap.composite(image, originX, originY, function(pasteErr, newSpritemap) {
               if (pasteErr) {
                 throw err;
               }
@@ -242,7 +245,7 @@ module.exports = function(sass) {
             });
           });
         } else {
-          curSpritemap.writeFile(path.join(dir, self.name + ".png"), function(err) {
+          curSpritemap.write(path.join(dir, self.name + ".png"), function(err) {
             if (err) {
               cb(err, null);
             } else {
@@ -258,12 +261,12 @@ module.exports = function(sass) {
         }
       };
 
-      lwip.create(self.width, self.height, function(err, spritemap) {
-        if (err) {
-          cb(err, null);
-        }
-        pasteImages(0, spritemap);
-      });
+        new Jimp(self.width, self.height, function(err, spritemap) {
+          if (err) {
+            cb(err, null);
+          }
+          pasteImages(0, spritemap);
+        });
     } else {
       cb(null, null); // spritemap is already up to date
     }

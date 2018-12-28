@@ -37,9 +37,9 @@
     "should": "^7.1.0"
   },
   "dependencies": {
-    "pajk-lwip": "^0.2.0",
-    "node-sass-utils": "^1.1.2",
-    "minimatch": "^2.0.8"
+    "jimp": "~0.6.0",
+    "minimatch": "^2.0.8",
+    "node-sass-utils": "^1.1.2"
   },
   "scripts": {
     "test": "./node_modules/.bin/gulp test"
